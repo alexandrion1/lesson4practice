@@ -6,6 +6,7 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import static io.restassured.RestAssured.baseURI;
+import static io.restassured.RestAssured.given;
 import static utils.Steps.*;
 
 public class TestReqres {
@@ -22,7 +23,7 @@ public class TestReqres {
         Allure.addAttachment("URL", url);
         Response response = GET(url);
         isstatuscodevalid(response,200);
-        isBodyContainsValue(response, "data.email", "michael.lawson@reqres.in");
+        isexpectedemail(response,"michael.lawson@reqres.in");
 
     }
     @Test
@@ -38,36 +39,43 @@ public class TestReqres {
     public void testCreateuser()
     {
         String url = "/users";
+        String contenttype = "application/json";
         String body = "{\n" +
                 "    \"name\": \"morpheus\",\n" +
                 "    \"job\": \"leader\"\n" +
                 "}";
-        Response response = POST(body, url);
+        Response response = POST(body, url, contenttype);
         isstatuscodevalid(response, 201);
+        isBodyContainsValue(response, "name", "morpheus");
+
+
     }
     @Test
     public void testUpdateuser()
     {
         String url = "/users";
+        String contenttype = "application/json";
         String body = "{\n" +
                 "    \"name\": \"morpheus\",\n" +
                 "    \"job\": \"QA Automation leader Patch\"\n" +
                 "}";
-        Response response = PATCH(body, url);
+        Response response = PATCH(body, url, contenttype);
         isstatuscodevalid(response, 201);
-        isBodyContains(response, "id");
+        isBodyContainsValue(response, "name", "morpheus");
     }
     @Test
     public void testUpdatuser()
     {
         String url = "/users";
+        String contenttype = "application/json";
         String body = "{\n" +
                 "    \"name\": \"morpheus\",\n" +
                 "    \"job\": \"QA Automation leader Put\"\n" +
                 "}";
-        Response response = PUT(body, url);
+        Response response = PUT(body, url, contenttype);
         isstatuscodevalid(response, 201);
-        isBodyContains(response, "id");
+        isBodyContainsValue(response, "job", "QA Automation leader Put");
+
     }
 
     @Test
